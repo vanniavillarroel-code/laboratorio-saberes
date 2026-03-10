@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laboratorio de Saberes · UNIFRANZ</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131c;
+  --surface2: #1c1c2a;
+  --surface3: #242436;
+  --border: #2a2a3f;
+  --border2: #363650;
+  --text: #f0f0f8;
+  --muted: #8888aa;
+  --faint: #44445a;
+  --apthapi: #f4a261;
+  --apthapi2: #e76f51;
+  --crisol: #4cc9f0;
+  --crisol2: #4361ee;
+  --alkimia: #7b2d8b;
+  --alkimia2: #c77dff;
+  --green: #52b788;
+  --red: #e63946;
+  --gold: #ffd60a;
+  --r: 14px;
+  --r2: 10px;
+}
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NOISE ── */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9999;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,15,0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 56px;
+}
+
+.nav-logo {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin-right: 32px;
+  white-space: nowrap;
+}
+.nav-logo span { color: var(--apthapi); }
+
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  flex: 1;
+}
+
+.nav-tab {
+  padding: 0 20px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active { color: var(--text); }
+.nav-tab[data-tab="apthapi"].active { border-color: var(--apthapi); color: var(--apthapi); }
+.nav-tab[data-tab="crisol"].active  { border-color: var(--crisol);  color: var(--crisol); }
+.nav-tab[data-tab="alkimia"].active { border-color: var(--alkimia2); color: var(--alkimia2); }
+
+.nav-dot { width: 7px; height: 7px; border-radius: 50%; }
+.dot-apthapi { background: var(--apthapi); }
+.dot-crisol  { background: var(--crisol); }
+.dot-alkimia { background: var(--alkimia2); }
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: var(--apthapi);
+  color: #0a0a0f;
+  border: none;
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(244,162,97,0.3); }
+
+/* ── SECTIONS ── */
+.section { display: none; animation: fadeUp 0.35s ease both; }
+.section.active { display: block; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+.hero {
+  padding: 70px 40px 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content:'';
+  position:absolute;
+  top:-120px; right:-100px;
+  width:500px; height:500px;
+  background: radial-gradient(circle, rgba(244,162,97,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.hero-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(244,162,97,0.1);
+  border: 1px solid rgba(244,162,97,0.25);
+  color: var(--apthapi);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--apthapi);
+}
+
+.hero-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 36px;
+}
+
+.hero-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+}
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin: 0 40px 40px;
+}
+
+.stat {
+  background: var(--surface);
+  padding: 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-val {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+.stat-val.orange { color: var(--apthapi); }
+.stat-val.blue   { color: var(--crisol); }
+.stat-val.purple { color: var(--alkimia2); }
+.stat-val.green  { color: var(--green); }
+
+.stat-label {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+}
+
+/* ══════════════════════════════════════
+   APTHAPI — KANBAN
+══════════════════════════════════════ */
+.section-header {
+  padding: 32px 40px 20px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.section-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-ghost:hover { border-color: var(--text); color: var(--text); }
+
+.kanban-wrap {
+  display: flex;
+  gap: 14px;
+  padding: 0 40px 40px;
+  overflow-x: auto;
+  align-items: flex-start;
+}
+
+.kanban-col {
+  min-width: 256px;
+  max-width: 256px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.kanban-col-head {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.kcol-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink:0; }
+.kcol-name { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; flex:1; }
+.kcol-count { background: var(--surface2); color: var(--muted); padding: 1px 7px; border-radius: 10px; font-size: 0.65rem; font-weight: 600; }
+
+.kcol-body {
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 80px;
+}
+.kcol-body.over { background: rgba(244,162,97,0.04); }
+
+/* ── IDEA CARD ── */
+.idea-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--r2);
+  padding: 12px;
+  cursor: grab;
+  transition: all 0.18s;
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.25s ease both;
+}
+.idea-card::before {
+  content:'';
+  position:absolute;
+  left:0; top:0; bottom:0;
+  width:3px;
+}
+.idea-card[data-cat="academico"]::before    { background: var(--crisol2); }
+.idea-card[data-cat="investigacion"]::before{ background: var(--crisol); }
+.idea-card[data-cat="social"]::before       { background: var(--green); }
+.idea-card[data-cat="proyecto"]::before     { background: var(--apthapi); }
+.idea-card[data-cat="personal"]::before     { background: var(--alkimia2); }
+.idea-card[data-cat="problema"]::before     { background: var(--red); }
+
+.idea-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.5); border-color: var(--border2); }
+.idea-card.dragging { opacity: 0.3; transform: rotate(1.5deg); }
+
+.card-tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:7px; }
+.tag {
+  font-size: 0.58rem;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tag-academico    { background: rgba(67,97,238,0.18); color: #818cf8; }
+.tag-investigacion{ background: rgba(76,201,240,0.15); color: var(--crisol); }
+.tag-social       { background: rgba(82,183,136,0.18); color: var(--green); }
+.tag-proyecto     { background: rgba(244,162,97,0.18); color: var(--apthapi); }
+.tag-personal     { background: rgba(199,125,255,0.18); color: var(--alkimia2); }
+.tag-problema     { background: rgba(230,57,70,0.18); color: var(--red); }
+.tag-urgente      { background: rgba(230,57,70,0.2); color: var(--red); }
+
+.card-title { font-size: 0.82rem; font-weight: 600; line-height: 1.3; margin-bottom: 5px; }
+.card-desc  { font-size: 0.71rem; color: var(--muted); line-height: 1.45; margin-bottom: 9px; font-weight: 300; }
+
+.card-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid var(--border); }
+.card-author { display: flex; align-items: center; gap: 5px; font-size: 0.65rem; color: var(--muted); }
+.avatar { width: 18px; height: 18px; border-radius: 50%; display:flex; align-items:center; justify-content:center; font-size:0.5rem; font-weight:700; flex-shrink:0; }
+.card-votes { display:flex; align-items:center; gap:3px; font-size:0.65rem; color:var(--muted); background:var(--surface3); padding: 2px 7px; border-radius:8px; cursor:pointer; transition:all 0.15s; }
+.card-votes:hover { color: var(--gold); }
+
+.empty-col { text-align:center; padding:20px 10px; color:var(--faint); font-size:0.72rem; border:1px dashed var(--border); border-radius:8px; }
+
+/* col colors */
+.k-nueva     .kcol-dot { background: var(--apthapi); }
+.k-nueva     .kcol-name { color: var(--apthapi); }
+.k-sprint    .kcol-dot { background: var(--crisol); }
+.k-sprint    .kcol-name { color: var(--crisol); }
+.k-build     .kcol-dot { background: var(--alkimia2); }
+.k-build     .kcol-name { color: var(--alkimia2); }
+.k-bloqueado .kcol-dot { background: var(--red); }
+.k-bloqueado .kcol-name { color: var(--red); }
+.k-crisol    .kcol-dot { background: var(--gold); }
+.k-crisol    .kcol-name { color: var(--gold); }
+.k-done      .kcol-dot { background: var(--green); }
+.k-done      .kcol-name { color: var(--green); }
+
+@keyframes slideIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+/* ══════════════════════════════════════
+   CRISOL — SESIONES
+══════════════════════════════════════ */
+.crisol-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  padding: 0 40px 40px;
+}
+
+@media (max-width: 900px) {
+  .crisol-grid { grid-template-columns: 1fr; }
+}
+
+.session-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 14px;
+  transition: all 0.2s;
+}
+.session-card:hover { border-color: var(--border2); }
+
+.session-head {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+}
+
+.session-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--surface2);
+  color: var(--crisol);
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid rgba(76,201,240,0.2);
+  white-space: nowrap;
+}
+
+.session-info { flex: 1; }
+.session-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 2px; }
+.session-meta  { font-size: 0.7rem; color: var(--muted); }
+
+.session-status {
+  font-size: 0.65rem;
+  padding: 3px 9px;
+  border-radius: 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.s-programada { background: rgba(76,201,240,0.1); color: var(--crisol); }
+.s-realizada  { background: rgba(82,183,136,0.12); color: var(--green); }
+.s-en-curso   { background: rgba(255,214,10,0.12); color: var(--gold); }
+
+.session-body { padding: 18px 20px; display: none; }
+.session-body.open { display: block; }
+
+.session-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.s-field label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 600; display:block; margin-bottom: 4px; }
+.s-field p { font-size: 0.8rem; color: var(--text); }
+
+.acta-drop {
+  border: 1px dashed var(--border2);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 14px;
+}
+.acta-drop:hover { border-color: var(--crisol); background: rgba(76,201,240,0.04); }
+.acta-drop p { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+.acta-drop .drop-icon { font-size: 1.4rem; }
+.acta-drop input { display: none; }
+
+.acta-list { display: flex; flex-direction: column; gap: 6px; }
+.acta-item {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px 12px; font-size: 0.75rem;
+}
+.acta-item .acta-name { flex: 1; color: var(--text); }
+.acta-item .acta-size { color: var(--muted); font-size: 0.65rem; }
+.acta-item .acta-del { color: var(--red); cursor: pointer; font-size: 0.75rem; opacity: 0.6; }
+.acta-item .acta-del:hover { opacity: 1; }
+
+.team-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.team-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 3px 10px 3px 5px;
+  font-size: 0.7rem; color: var(--text);
+}
+
+/* sidebar */
+.crisol-sidebar {}
+.sidebar-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.sidebar-card h3 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 14px; }
+
+.next-crisol-banner {
+  background: linear-gradient(135deg, rgba(76,201,240,0.1), rgba(67,97,238,0.1));
+  border: 1px solid rgba(76,201,240,0.2);
+  border-radius: var(--r);
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.next-crisol-banner .next-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--crisol); font-weight: 700; margin-bottom: 6px; }
+.next-crisol-banner .next-date { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 900; margin-bottom: 4px; }
+.next-crisol-banner .next-meta { font-size: 0.75rem; color: var(--muted); }
+
+.turnos-list { display: flex; flex-direction: column; gap: 7px; }
+.turno-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+.turno-item:last-child { border-bottom: none; }
+.turno-num { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--crisol); width: 20px; }
+.turno-name { flex: 1; font-size: 0.78rem; }
+.turno-tag { font-size: 0.6rem; padding: 2px 7px; border-radius: 6px; }
+.turno-done { background: rgba(82,183,136,0.12); color: var(--green); }
+.turno-next { background: rgba(255,214,10,0.12); color: var(--gold); }
+.turno-pending { background: var(--surface2); color: var(--muted); }
+
+/* ══════════════════════════════════════
+   ALKIMIA — PROYECTOS
+══════════════════════════════════════ */
+.alkimia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  padding: 0 40px 40px;
+}
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
+  position: relative;
+}
+.project-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+}
+.project-card[data-estado="iniciando"]::before    { background: var(--crisol); }
+.project-card[data-estado="desarrollo"]::before   { background: var(--apthapi); }
+.project-card[data-estado="prototipando"]::before { background: var(--alkimia2); }
+.project-card[data-estado="lanzado"]::before      { background: var(--gold); }
+.project-card[data-estado="completado"]::before   { background: var(--green); }
+.project-card[data-estado="pausado"]::before      { background: var(--faint); }
+
+.project-card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.5); border-color: var(--border2); }
+
+.proj-head { padding: 18px 18px 14px; border-bottom: 1px solid var(--border); }
+.proj-status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.proj-status {
+  font-size: 0.62rem; padding: 3px 9px; border-radius: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+}
+.ps-iniciando    { background: rgba(76,201,240,0.12); color: var(--crisol); }
+.ps-desarrollo   { background: rgba(244,162,97,0.12); color: var(--apthapi); }
+.ps-prototipando { background: rgba(199,125,255,0.12); color: var(--alkimia2); }
+.ps-lanzado      { background: rgba(255,214,10,0.12); color: var(--gold); }
+.ps-completado   { background: rgba(82,183,136,0.12); color: var(--green); }
+.ps-pausado      { background: rgba(68,68,90,0.3); color: var(--muted); }
+
+.proj-progress-ring { position: relative; width: 36px; height: 36px; }
+.proj-progress-ring svg { transform: rotate(-90deg); }
+.proj-progress-ring .ring-track { fill: none; stroke: var(--surface3); stroke-width: 3; }
+.proj-progress-ring .ring-fill  { fill: none; stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+.proj-progress-ring .ring-text  { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; font-weight: 700; font-family: 'DM Mono', monospace; }
+
+.proj-title { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
+.proj-desc  { font-size: 0.75rem; color: var(--muted); line-height: 1.5; font-weight: 300; }
+
+.proj-body { padding: 14px 18px; }
+.proj-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+
+.team-row { display: flex; gap: -4px; margin-bottom: 14px; }
+.team-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem; font-weight: 700;
+  border: 2px solid var(--surface);
+  margin-left: -4px;
+}
+.team-avatar:first-child { margin-left: 0; }
+
+.proj-prog-bar { background: var(--surface2); border-radius: 4px; height: 5px; overflow:hidden; margin-bottom: 14px; }
+.proj-prog-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--apthapi), var(--alkimia2)); transition: width 0.5s ease; }
+
+.proj-foot { padding: 12px 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.proj-dates { font-size: 0.65rem; color: var(--muted); }
+.proj-docs-btn { font-size: 0.65rem; color: var(--muted); background: var(--surface2); border: 1px solid var(--border); padding: 3px 9px; border-radius: 6px; cursor:pointer; transition:all 0.15s; }
+.proj-docs-btn:hover { border-color: var(--alkimia2); color: var(--alkimia2); }
+
+/* ── NUEVA IDEA MODAL ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 18px;
+  padding: 30px;
+  width: 480px;
+  max-width: 94vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fadeUp 0.25s ease both;
+}
+
+.modal-title {
+  font-family: 'Fraunces', serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+.modal-sub { font-size: 0.76rem; color: var(--muted); margin-bottom: 22px; }
+
+.fg { margin-bottom: 14px; }
+.fg label { display: block; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 5px; }
+.fg input, .fg textarea, .fg select {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  outline: none;
+  transition: border 0.18s;
+}
+.fg input:focus, .fg textarea:focus, .fg select:focus { border-color: var(--apthapi); }
+.fg textarea { resize: vertical; min-height: 70px; }
+.fg select option { background: var(--surface2); }
+
+.fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+.btn-cancel { background: transparent; border: 1px solid var(--border2); color: var(--muted); padding: 8px 16px; border-radius: 8px; font-family: 'Outfit', sans-serif; cursor: pointer; font-size: 0.8rem; transition: all 0.18s; }
+.btn-cancel:hover { border-color: var(--text); color: var(--text); }
+.btn-submit { background: var(--apthapi); color: #0a0a0f; border: none; padding: 8px 22px; border-radius: 8px; font-family: 'Outfit', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.8rem; transition: all 0.18s; }
+.btn-submit:hover { box-shadow: 0 6px 20px rgba(244,162,97,0.3); transform: translateY(-1px); }
+.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── PROJECT DETAIL MODAL ── */
+.proj-modal-body { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.pm-section { margin-bottom: 16px; }
+.pm-section h4 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 700; margin-bottom: 8px; }
+
+.pm-doc-drop {
+  border: 1px dashed var(--border2); border-radius: 8px; padding: 14px;
+  text-align: center; cursor: pointer; transition: all 0.18s;
+}
+.pm-doc-drop:hover { border-color: var(--alkimia2); background: rgba(199,125,255,0.04); }
+.pm-doc-drop p { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+.pm-doc-drop input { display: none; }
+
+/* ── RECONOCIMIENTOS ── */
+.reconoc-section {
+  padding: 0 40px 40px;
+}
+.reconoc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.reconoc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  text-align: center;
+}
+.reconoc-medal { font-size: 2rem; margin-bottom: 8px; }
+.reconoc-name { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+.reconoc-reason { font-size: 0.74rem; color: var(--muted); font-weight: 300; }
+.reconoc-month { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--apthapi); margin-top: 8px; font-weight: 600; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 22px; right: 22px;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 10px 16px; font-size: 0.76rem;
+  z-index: 9998; transform: translateY(60px); opacity: 0; transition: all 0.25s ease;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok  { border-color: var(--green); color: var(--green); }
+.toast.err { border-color: var(--red); color: var(--red); }
+.toast.inf { border-color: var(--crisol); color: var(--crisol); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius:3px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  nav { padding: 0 16px; }
+  .hero, .section-header, .kanban-wrap, .crisol-grid, .alkimia-grid, .reconoc-section { padding-left:16px; padding-right:16px; }
+  .stats-row { margin-left:16px; margin-right:16px; }
+  .hero h1 { font-size: 2rem; }
+  .nav-logo { font-size: 0.85rem; margin-right: 12px; }
+  .nav-tab  { padding: 0 10px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">LAB<span>·</span>UNIFRANZ</div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" data-tab="apthapi" onclick="switchTab('apthapi')">
+      <span class="nav-dot dot-apthapi"></span> Apthapi
+    </div>
+    <div class="nav-tab" data-tab="crisol" onclick="switchTab('crisol')">
+      <span class="nav-dot dot-crisol"></span> Crisol
+    </div>
+    <div class="nav-tab" data-tab="alkimia" onclick="switchTab('alkimia')">
+      <span class="nav-dot dot-alkimia"></span> Alkimia
+    </div>
+  </div>
+  <div class="nav-right">
+    <button class="btn-primary" onclick="openIdeaModal()">+ Nueva Idea</button>
+  </div>
+</nav>
+
+<!-- ══ APTHAPI ══════════════════════════════════ -->
+<div class="section active" id="tab-apthapi">
+
+  <div class="hero">
+    <div class="hero-label">🪄 Apthapi de Ideas</div>
+    <h1>Toda idea cuenta.<br><em>Toda voz importa.</em></h1>
+    <p class="hero-sub">Un espacio sin jerarquías donde cualquier miembro de la Nación UNIFRANZ puede registrar una idea en cualquier momento. Sin filtros. Sin errores. Cada nota = 1 idea.</p>
+    <div class="hero-pills">
+      <span class="pill">🎓 Académico</span>
+      <span class="pill">🔍 Investigación</span>
+      <span class="pill">🤝 Social</span>
+      <span class="pill">🚀 Proyecto</span>
+      <span class="pill">💼 Personal</span>
+      <span class="pill">🌍 Problema social</span>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val orange" id="stat-total">0</div><div class="stat-label">Ideas registradas</div></div>
+    <div class="stat"><div class="stat-val blue" id="stat-sprint">0</div><div class="stat-label">En sprint</div></div>
+    <div class="stat"><div class="stat-val purple" id="stat-crisol-count">0</div><div class="stat-label">En crisol</div></div>
+    <div class="stat"><div class="stat-val green" id="stat-done">0</div><div class="stat-label">Completadas</div></div>
+  </div>
+
+  <div class="section-header">
+    <div>
+      <div class="section-title">Tablero Kanban</div>
+      <div class="section-desc">Arrastra las tarjetas entre columnas para actualizar el estado</div>
+    </div>
+    <button class="btn-ghost" onclick="openIdeaModal()">+ Agregar idea</button>
+  </div>
+
+  <div class="kanban-wrap">
+    <div class="kanban-col k-nueva">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">📌 Nueva</div><div class="kcol-count" id="cnt-nueva">0</div></div>
+      <div class="kcol-body" id="col-nueva" ondragover="dOver(event)" ondrop="dDrop(event,'nueva')"></div>
+    </div>
+    <div class="kanban-col k-sprint">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">⚡ Sprint</div><div class="kcol-count" id="cnt-sprint">0</div></div>
+      <div class="kcol-body" id="col-sprint" ondragover="dOver(event)" ondrop="dDrop(event,'sprint')"></div>
+    </div>
+    <div class="kanban-col k-build">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">🔨 Build MVP</div><div class="kcol-count" id="cnt-build">0</div></div>
+      <div class="kcol-body" id="col-build" ondragover="dOver(event)" ondrop="dDrop(event,'build')"></div>
+    </div>
+    <div class="kanban-col k-bloqueado">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">🚧 Bloqueado</div><div class="kcol-count" id="cnt-bloqueado">0</div></div>
+      <div class="kcol-body" id="col-bloqueado" ondragover="dOver(event)" ondrop="dDrop(event,'bloqueado')"></div>
+    </div>
+    <div class="kanban-col k-crisol">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">🔬 Crisol</div><div class="kcol-count" id="cnt-crisol">0</div></div>
+      <div class="kcol-body" id="col-crisol" ondragover="dOver(event)" ondrop="dDrop(event,'crisol')"></div>
+    </div>
+    <div class="kanban-col k-done">
+      <div class="kanban-col-head"><div class="kcol-dot"></div><div class="kcol-name">✅ Completada</div><div class="kcol-count" id="cnt-done">0</div></div>
+      <div class="kcol-body" id="col-done" ondragover="dOver(event)" ondrop="dDrop(event,'done')"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ CRISOL ══════════════════════════════════ -->
+<div class="section" id="tab-crisol">
+
+  <div class="hero" style="--hero-accent:var(--crisol)">
+    <div class="hero-label" style="background:rgba(76,201,240,0.1);border-color:rgba(76,201,240,0.25);color:var(--crisol)">🔬 Crisol de Innovación</div>
+    <h1>Donde las ideas se <em style="color:var(--crisol)">fusionan</em><br>y se transforman.</h1>
+    <p class="hero-sub">Reuniones quincenales cada 2 viernes. Debate intenso, cuestionamiento y fricción creativa. Ideas diversas que chocan y crean algo nuevo.</p>
+  </div>
+
+  <div class="crisol-grid">
+    <div class="crisol-main">
+
+      <div class="section-header" style="padding:0 0 16px">
+        <div>
+          <div class="section-title" style="font-size:1.1rem">Sesiones del Crisol</div>
+          <div class="section-desc">Registro de reuniones, acuerdos y actas</div>
+        </div>
+        <button class="btn-primary" style="background:var(--crisol);color:#0a0a0f" onclick="addSession()">+ Nueva Sesión</button>
+      </div>
+
+      <div id="sessions-list"></div>
+
+    </div>
+
+    <div class="crisol-sidebar">
+
+      <div class="next-crisol-banner">
+        <div class="next-label">⏰ Próximo Crisol</div>
+        <div class="next-date" id="nextDate">—</div>
+        <div class="next-meta">3:00 PM · Sala IPEE · <span id="nextLider">—</span></div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>🔄 Turnos de liderazgo</h3>
+        <div class="turnos-list" id="turnosList"></div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>📊 Indicadores</h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.72rem;color:var(--muted)">Sesiones realizadas</span>
+              <span style="font-size:0.72rem;font-weight:700;color:var(--crisol)" id="ind-sesiones">0</span>
+            </div>
+            <div class="proj-prog-bar"><div class="proj-prog-fill" id="bar-sesiones" style="width:0%;background:var(--crisol)"></div></div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+              <span style="font-size:0.72rem;color:var(--muted)">Propuestas generadas</span>
+              <span style="font-size:0.72rem;font-weight:700;color:var(--apthapi)" id="ind-propuestas">0</span>
+            </div>
+            <div class="proj-prog-bar"><div class="proj-prog-fill" id="bar-propuestas" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ ALKIMIA ══════════════════════════════════ -->
+<div class="section" id="tab-alkimia">
+
+  <div class="hero">
+    <div class="hero-label" style="background:rgba(199,125,255,0.1);border-color:rgba(199,125,255,0.25);color:var(--alkimia2)">⚗️ Alkimia Creativa</div>
+    <h1>Ideas que se vuelven<br><em style="color:var(--alkimia2)">proyectos reales.</em></h1>
+    <p class="hero-sub">Prototipado rápido, fracaso aceptado como aprendizaje e iteración constante. Con líderes, equipos y fechas claras.</p>
+  </div>
+
+  <div class="section-header">
+    <div>
+      <div class="section-title">Proyectos en Alkimia</div>
+      <div class="section-desc">Haz click en un proyecto para ver detalles y subir documentos</div>
+    </div>
+    <button class="btn-primary" style="background:var(--alkimia2);color:#0a0a0f" onclick="openProjectModal()">+ Nuevo Proyecto</button>
+  </div>
+
+  <div class="alkimia-grid" id="projects-grid"></div>
+
+  <div class="reconoc-section">
+    <div class="section-title" style="font-size:1.1rem;margin-bottom:4px">🏆 Reconocimientos del mes</div>
+    <div class="section-desc">El mejor compañero/a celebrado por el equipo</div>
+    <div class="reconoc-grid" id="reconoc-grid"></div>
+  </div>
+
+</div>
+
+<!-- MODALS -->
+<div class="overlay" id="ideaOverlay">
+  <div class="modal">
+    <div class="modal-title">✨ Nueva Idea</div>
+    <div class="modal-sub">Cada nota = 1 idea · No hay ideas incorrectas · Toda la Nación puede aportar</div>
+    <div class="fg"><label>Título de la idea *</label><input id="fi-title" placeholder="¿Qué propones?"></div>
+    <div class="fg"><label>Descripción</label><textarea id="fi-desc" placeholder="¿Qué problema resuelve o qué oportunidad crea?"></textarea></div>
+    <div class="fg-row">
+      <div class="fg">
+        <label>Categoría</label>
+        <select id="fi-cat">
+          <option value="proyecto">🚀 Proyecto</option>
+          <option value="academico">🎓 Académico</option>
+          <option value="investigacion">🔍 Investigación</option>
+          <option value="social">🤝 Social</option>
+          <option value="personal">💼 Personal</option>
+          <option value="problema">🌍 Problema social</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Urgencia</label>
+        <select id="fi-urg">
+          <option value="media">🟡 Media</option>
+          <option value="alta">🔴 Alta / Urgente</option>
+          <option value="baja">🟢 Para el Crisol</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label>Tu nombre (opcional)</label><input id="fi-author" placeholder="Puede ser anónimo"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeOverlay('ideaOverlay')">Cancelar</button>
+      <button class="btn-submit" onclick="submitIdea()">Agregar al Apthapi →</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="projOverlay">
+  <div class="modal" style="width:580px">
+    <div class="modal-title">⚗️ Nuevo Proyecto</div>
+    <div class="modal-sub">Proyecto surgido del Crisol de Innovación</div>
+    <div class="fg"><label>Nombre del proyecto *</label><input id="fp-title" placeholder="¿Cómo se llama?"></div>
+    <div class="fg"><label>Problema que resuelve</label><textarea id="fp-prob" placeholder="¿Cuál es el problema u oportunidad?"></textarea></div>
+    <div class="fg"><label>Solución / MVP propuesto</label><textarea id="fp-mvp" placeholder="¿Qué van a construir?"></textarea></div>
+    <div class="fg-row">
+      <div class="fg">
+        <label>Estado</label>
+        <select id="fp-estado">
+          <option value="iniciando">🌱 Iniciando</option>
+          <option value="desarrollo">🔨 En desarrollo</option>
+          <option value="prototipando">🧪 Prototipando</option>
+          <option value="lanzado">🚀 Lanzado</option>
+          <option value="completado">✅ Completado</option>
+          <option value="pausado">⏸️ Pausado</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Progreso %</label>
+        <input id="fp-prog" type="number" min="0" max="100" placeholder="0" value="0">
+      </div>
+    </div>
+    <div class="fg"><label>Líder del proyecto</label><input id="fp-lider" placeholder="Nombre del líder"></div>
+    <div class="fg"><label>Equipo (separar con comas)</label><input id="fp-team" placeholder="Ana, Carlos, María..."></div>
+    <div class="fg"><label>Indicador de éxito</label><input id="fp-kpi" placeholder="¿Cómo sabremos que funcionó?"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeOverlay('projOverlay')">Cancelar</button>
+      <button class="btn-submit" style="background:var(--alkimia2)" onclick="submitProject()">Crear proyecto →</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="projDetailOverlay">
+  <div class="modal" style="width:600px">
+    <div class="modal-title" id="pd-title">—</div>
+    <div class="modal-sub" id="pd-sub">—</div>
+    <div class="proj-modal-body">
+      <div>
+        <div class="pm-section">
+          <h4>👥 Equipo</h4>
+          <div class="team-chips" id="pd-team"></div>
+        </div>
+        <div class="pm-section">
+          <h4>📊 Progreso</h4>
+          <div class="proj-prog-bar" style="margin-bottom:6px"><div class="proj-prog-fill" id="pd-progbar" style="width:0%"></div></div>
+          <span style="font-size:0.7rem;color:var(--muted)" id="pd-progtext">0%</span>
+        </div>
+        <div class="pm-section">
+          <h4>🎯 Indicador de éxito</h4>
+          <p style="font-size:0.78rem;color:var(--muted)" id="pd-kpi">—</p>
+        </div>
+      </div>
+      <div>
+        <div class="pm-section">
+          <h4>📁 Documentos y Actas</h4>
+          <div class="pm-doc-drop" onclick="document.getElementById('pd-file-input').click()">
+            <div style="font-size:1.3rem">📎</div>
+            <p>Click para subir PDF, Word, imagen</p>
+            <input type="file" id="pd-file-input" multiple accept=".pdf,.doc,.docx,.jpg,.png,.pptx" onchange="handleProjFile(event)">
+          </div>
+          <div class="acta-list" id="pd-docs" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="pm-section">
+      <h4>📝 Retroalimentación mensual</h4>
+      <textarea style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.8rem;outline:none;resize:vertical;min-height:70px" id="pd-retro" placeholder="Notas del seguimiento mensual..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeOverlay('projDetailOverlay')">Cerrar</button>
+      <button class="btn-submit" style="background:var(--alkimia2)" onclick="saveProjDetail()">Guardar cambios</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+//  STATE (localStorage)
+// ═══════════════════════════════════════
+const KEY = 'lab_saberes_v2';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || defaultState(); }
+  catch { return defaultState(); }
+}
+
+function saveState() { localStorage.setItem(KEY, JSON.stringify(STATE)); }
+
+function defaultState() {
+  return {
+    ideas: [
+      { id:'i1', title:'Red de tutorías entre pares', desc:'Estudiantes avanzados apoyan a los de primer año en materias críticas.', cat:'social', urg:'alta', author:'María R.', col:'nueva', votes:3, date:'2025-03-01' },
+      { id:'i2', title:'Podcast de investigación UNIFRANZ', desc:'Canal donde docentes y estudiantes comparten hallazgos de sus investigaciones.', cat:'academico', urg:'media', author:'Jorge C.', col:'sprint', votes:5, date:'2025-03-03' },
+      { id:'i3', title:'Mapa de talentos ocultos', desc:'Inventario vivo de habilidades no laborales del equipo para conectar con proyectos.', cat:'proyecto', urg:'baja', author:'Lucía P.', col:'crisol', votes:2, date:'2025-03-05' },
+      { id:'i4', title:'Galería de arte rotativa', desc:'Espacio para que artistas de la Nación UNIFRANZ expongan en las oficinas.', cat:'social', urg:'media', author:'Tomás R.', col:'build', votes:4, date:'2025-03-06' },
+      { id:'i5', title:'Newsletter de ideas quincenal', desc:'Resumen digital de las mejores ideas del Apthapi enviado a toda la nación.', cat:'proyecto', urg:'alta', author:'Sara V.', col:'done', votes:7, date:'2025-02-20' },
+    ],
+    sessions: [
+      { id:'s1', num:'#01', title:'Crisol #01 · Marzo 2025', date:'2025-03-14', lider:'Ana Gómez', status:'programada', resumen:'', pasos:'', participantes:0, propuestas:0, docs:[] },
+      { id:'s2', num:'#00', title:'Crisol #00 · Febrero 2025', date:'2025-02-28', lider:'Carlos Mendez', status:'realizada', resumen:'Se debatieron 4 ideas. Se aprobó el proyecto de galería de arte y el newsletter.', pasos:'Designar líder de galería. Primer número de newsletter para el 15 de marzo.', participantes:8, propuestas:2, docs:[] },
+    ],
+    projects: [
+      { id:'p1', title:'Newsletter Quincenal de Ideas', prob:'El equipo no tiene visibilidad de las ideas que se generan en el Apthapi.', mvp:'Correo digital quincenal con las top 5 ideas votadas.', estado:'desarrollo', prog:65, lider:'Sara V.', team:['SV','KM','TR'], kpi:'Tasa de apertura >40% en primer mes', docs:[], retro:'' },
+      { id:'p2', title:'Galería de Arte en Oficinas', prob:'Los artistas de UNIFRANZ no tienen espacio de exposición dentro de la institución.', mvp:'Espacio rotativo mensual en sala principal con 3 artistas.', estado:'iniciando', prog:20, lider:'Tomás R.', team:['TR','LP'], kpi:'3 artistas expuestos en primer mes', docs:[], retro:'' },
+    ],
+    reconocimientos: [
+      { mes:'Febrero 2025', nombre:'Carlos Méndez', razon:'Lideró el primer Crisol con gran dinamismo y promovió la participación de 3 áreas nuevas.', medal:'🥇' },
+    ],
+    turnos: ['Ana Gómez','Carlos Méndez','Lucía Paredes','Jorge Castro','Sara Vidal','Tomás Ríos','María Ramos','Karla Mendoza'],
+    activeTurno: 0,
+  };
+}
+
+let STATE = loadState();
+let dragCard = null, dragId = null;
+let activeProjId = null;
+
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
+function switchTab(tab) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  if (tab === 'apthapi') renderKanban();
+  if (tab === 'crisol')  renderCrisol();
+  if (tab === 'alkimia') renderAlkimia();
+}
+
+// ═══════════════════════════════════════
+//  KANBAN
+// ═══════════════════════════════════════
+const COLS = ['nueva','sprint','build','bloqueado','crisol','done'];
+
+function renderKanban() {
+  COLS.forEach(col => {
+    const el = document.getElementById('col-'+col);
+    el.innerHTML = '';
+    const ideas = STATE.ideas.filter(i => i.col === col);
+    if (!ideas.length) {
+      el.innerHTML = '<div class="empty-col">Arrastra ideas aquí</div>';
+    } else {
+      ideas.forEach(idea => el.appendChild(makeIdeaCard(idea)));
+    }
+    document.getElementById('cnt-'+col).textContent = ideas.length;
+  });
+  updateStats();
+}
+
+function makeIdeaCard(idea) {
+  const c = document.createElement('div');
+  c.className = 'idea-card';
+  c.setAttribute('data-cat', idea.cat);
+  c.setAttribute('data-id', idea.id);
+  c.setAttribute('draggable','true');
+  c.addEventListener('dragstart', e => { dragCard=c; dragId=idea.id; setTimeout(()=>c.classList.add('dragging'),0); });
+  c.addEventListener('dragend', () => { c.classList.remove('dragging'); document.querySelectorAll('.kcol-body').forEach(b=>b.classList.remove('over')); });
+
+  const catLabel = {proyecto:'🚀 Proyecto',academico:'🎓 Académico',investigacion:'🔍 Investigación',social:'🤝 Social',personal:'💼 Personal',problema:'🌍 Social'}[idea.cat]||idea.cat;
+  const ini = (idea.author||'A').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const avatarColors = {proyecto:'#f4a261',academico:'#818cf8',investigacion:'#4cc9f0',social:'#52b788',personal:'#c77dff',problema:'#e63946'};
+  const ac = avatarColors[idea.cat]||'#888';
+
+  c.innerHTML = `
+    <div class="card-tags">
+      <span class="tag tag-${idea.cat}">${catLabel}</span>
+      ${idea.urg==='alta'?'<span class="tag tag-urgente">Urgente</span>':''}
+    </div>
+    <div class="card-title">${esc(idea.title)}</div>
+    ${idea.desc?`<div class="card-desc">${esc(idea.desc)}</div>`:''}
+    <div class="card-footer">
+      <div class="card-author">
+        <div class="avatar" style="background:${ac}22;color:${ac}">${ini}</div>
+        <span>${esc(idea.author||'Anónimo')}</span>
+      </div>
+      <div class="card-votes" onclick="voteIdea('${idea.id}',this)">
+        👍 <span>${idea.votes||0}</span>
+      </div>
+    </div>`;
+  return c;
+}
+
+function dOver(e) { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function dDrop(e, col) {
+  e.preventDefault();
+  document.querySelectorAll('.kcol-body').forEach(b=>b.classList.remove('over'));
+  if (!dragId) return;
+  const idea = STATE.ideas.find(i=>i.id===dragId);
+  if (idea) { idea.col = col; saveState(); renderKanban(); toast('✓ Movido a '+col,'ok'); }
+}
+
+function voteIdea(id, el) {
+  const idea = STATE.ideas.find(i=>i.id===id);
+  if (!idea) return;
+  idea.votes = (idea.votes||0)+1;
+  el.querySelector('span').textContent = idea.votes;
+  saveState();
+}
+
+function updateStats() {
+  document.getElementById('stat-total').textContent = STATE.ideas.length;
+  document.getElementById('stat-sprint').textContent = STATE.ideas.filter(i=>i.col==='sprint'||i.col==='build').length;
+  document.getElementById('stat-crisol-count').textContent = STATE.ideas.filter(i=>i.col==='crisol').length;
+  document.getElementById('stat-done').textContent = STATE.ideas.filter(i=>i.col==='done').length;
+}
+
+// ═══════════════════════════════════════
+//  NUEVA IDEA
+// ═══════════════════════════════════════
+function openIdeaModal() { document.getElementById('ideaOverlay').classList.add('open'); }
+
+function submitIdea() {
+  const title = document.getElementById('fi-title').value.trim();
+  if (!title) { toast('Escribe un título','err'); return; }
+  const idea = {
+    id: 'i'+Date.now(),
+    title,
+    desc: document.getElementById('fi-desc').value.trim(),
+    cat: document.getElementById('fi-cat').value,
+    urg: document.getElementById('fi-urg').value,
+    author: document.getElementById('fi-author').value.trim()||'Anónimo',
+    col: 'nueva', votes: 0,
+    date: new Date().toISOString().slice(0,10)
+  };
+  STATE.ideas.unshift(idea);
+  saveState();
+  renderKanban();
+  closeOverlay('ideaOverlay');
+  ['fi-title','fi-desc','fi-author'].forEach(id=>document.getElementById(id).value='');
+  toast('✅ Idea agregada al Apthapi','ok');
+}
+
+// ═══════════════════════════════════════
+//  CRISOL
+// ═══════════════════════════════════════
+function renderCrisol() {
+  renderSessions();
+  renderTurnos();
+  setNextCrisol();
+  updateCrisolIndicators();
+}
+
+function setNextCrisol() {
+  const now = new Date();
+  const d = now.getDay(), days = (5-d+7)%7||7;
+  const nf = new Date(now); nf.setDate(nf.getDate()+days);
+  document.getElementById('nextDate').textContent = nf.toLocaleDateString('es',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('nextLider').textContent = STATE.turnos[STATE.activeTurno] || '—';
+}
+
+function renderTurnos() {
+  const el = document.getElementById('turnosList');
+  el.innerHTML = '';
+  STATE.turnos.forEach((t,i) => {
+    const done = i < STATE.activeTurno;
+    const next = i === STATE.activeTurno;
+    el.innerHTML += `
+      <div class="turno-item">
+        <div class="turno-num">#${String(i+1).padStart(2,'0')}</div>
+        <div class="turno-name">${t}</div>
+        <div class="turno-tag ${done?'turno-done':next?'turno-next':'turno-pending'}">${done?'✓ Hecho':next?'Próximo':'—'}</div>
+      </div>`;
+  });
+}
+
+function renderSessions() {
+  const el = document.getElementById('sessions-list');
+  el.innerHTML = '';
+  [...STATE.sessions].reverse().forEach(s => {
+    const sc = {programada:'s-programada',realizada:'s-realizada','en-curso':'s-en-curso'}[s.status]||'s-programada';
+    const sl = {programada:'📅 Programada',realizada:'✅ Realizada','en-curso':'🔄 En curso'}[s.status]||'—';
+    const div = document.createElement('div');
+    div.className = 'session-card';
+    div.innerHTML = `
+      <div class="session-head" onclick="toggleSession('sb-${s.id}')">
+        <div class="session-num">${s.num}</div>
+        <div class="session-info">
+          <div class="session-title">${esc(s.title)}</div>
+          <div class="session-meta">${s.date} · Líder: ${esc(s.lider)} · ${s.participantes} participantes</div>
+        </div>
+        <div class="session-status ${sc}">${sl}</div>
+      </div>
+      <div class="session-body" id="sb-${s.id}">
+        <div class="session-grid2">
+          <div class="s-field"><label>Resumen de acuerdos</label><p>${esc(s.resumen)||'—'}</p></div>
+          <div class="s-field"><label>Próximos pasos</label><p>${esc(s.pasos)||'—'}</p></div>
+          <div class="s-field"><label>Propuestas generadas</label><p>${s.propuestas}</p></div>
+          <div class="s-field"><label>Participantes</label><p>${s.participantes}</p></div>
+        </div>
+        <div style="margin-bottom:10px">
+          <div class="pm-section"><h4 style="font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);font-weight:700;margin-bottom:8px">📁 Actas de la sesión</h4>
+            <div class="acta-drop" onclick="document.getElementById('af-${s.id}').click()">
+              <div class="drop-icon">📄</div>
+              <p>Click para subir PDF del acta</p>
+              <input type="file" id="af-${s.id}" accept=".pdf,.doc,.docx" onchange="handleActaFile(event,'${s.id}')">
+            </div>
+            <div class="acta-list" id="al-${s.id}">${renderActaList(s.docs)}</div>
+          </div>
+        </div>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function renderActaList(docs) {
+  if (!docs || !docs.length) return '';
+  return docs.map(d => `
+    <div class="acta-item">
+      <span style="font-size:0.9rem">📄</span>
+      <span class="acta-name">${esc(d.name)}</span>
+      <span class="acta-size">${d.size}</span>
+    </div>`).join('');
+}
+
+function toggleSession(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function handleActaFile(e, sessionId) {
+  const files = Array.from(e.target.files);
+  const s = STATE.sessions.find(x=>x.id===sessionId);
+  if (!s) return;
+  if (!s.docs) s.docs = [];
+  files.forEach(f => {
+    s.docs.push({ name: f.name, size: formatSize(f.size) });
+  });
+  saveState();
+  document.getElementById('al-'+sessionId).innerHTML = renderActaList(s.docs);
+  toast('📄 Acta subida: '+files.map(f=>f.name).join(', '),'ok');
+}
+
+function addSession() {
+  const num = `#${String(STATE.sessions.length).padStart(2,'0')}`;
+  const now = new Date();
+  const d = now.getDay(), days=(5-d+7)%7||7;
+  const nf = new Date(now); nf.setDate(nf.getDate()+days);
+  const s = {
+    id: 's'+Date.now(), num,
+    title: `Crisol ${num} · ${nf.toLocaleDateString('es',{month:'long',year:'numeric'})}`,
+    date: nf.toISOString().slice(0,10),
+    lider: STATE.turnos[STATE.activeTurno]||'—',
+    status:'programada', resumen:'', pasos:'',
+    participantes:0, propuestas:0, docs:[]
+  };
+  STATE.sessions.push(s);
+  STATE.activeTurno = (STATE.activeTurno+1) % STATE.turnos.length;
+  saveState();
+  renderCrisol();
+  toast('✓ Nueva sesión del Crisol creada','ok');
+}
+
+function updateCrisolIndicators() {
+  const done = STATE.sessions.filter(s=>s.status==='realizada').length;
+  const total = Math.max(STATE.sessions.length, 1);
+  const props = STATE.sessions.reduce((a,s)=>a+s.propuestas,0);
+  document.getElementById('ind-sesiones').textContent = done;
+  document.getElementById('ind-propuestas').textContent = props;
+  document.getElementById('bar-sesiones').style.width = Math.min(done/total*100,100)+'%';
+  document.getElementById('bar-propuestas').style.width = Math.min(props/10*100,100)+'%';
+}
+
+// ═══════════════════════════════════════
+//  ALKIMIA
+// ═══════════════════════════════════════
+function renderAlkimia() {
+  const grid = document.getElementById('projects-grid');
+  grid.innerHTML = '';
+  STATE.projects.forEach(p => grid.appendChild(makeProjectCard(p)));
+  renderReconoc();
+}
+
+const TEAM_COLORS = ['#f4a261','#4cc9f0','#52b788','#c77dff','#ffd60a','#e63946','#818cf8'];
+
+function makeProjectCard(p) {
+  const div = document.createElement('div');
+  div.className = 'project-card';
+  div.setAttribute('data-estado', p.estado);
+  div.onclick = () => openProjDetail(p.id);
+
+  const sc = {iniciando:'ps-iniciando',desarrollo:'ps-desarrollo',prototipando:'ps-prototipando',lanzado:'ps-lanzado',completado:'ps-completado',pausado:'ps-pausado'}[p.estado]||'ps-iniciando';
+  const sl = {iniciando:'🌱 Iniciando',desarrollo:'🔨 Desarrollo',prototipando:'🧪 Prototipando',lanzado:'🚀 Lanzado',completado:'✅ Completado',pausado:'⏸️ Pausado'}[p.estado]||p.estado;
+  const prog = p.prog||0;
+  const r = 15, circ = 2*Math.PI*r;
+  const dash = circ - (prog/100)*circ;
+  const ringColor = {iniciando:'var(--crisol)',desarrollo:'var(--apthapi)',prototipando:'var(--alkimia2)',lanzado:'var(--gold)',completado:'var(--green)',pausado:'var(--faint)'}[p.estado]||'var(--apthapi)';
+
+  const teamAvatars = (p.team||[]).map((t,i)=>`
+    <div class="team-avatar" style="background:${TEAM_COLORS[i%TEAM_COLORS.length]}22;color:${TEAM_COLORS[i%TEAM_COLORS.length]}">${t.slice(0,2)}</div>`).join('');
+
+  div.innerHTML = `
+    <div class="proj-head">
+      <div class="proj-status-row">
+        <div class="proj-status ${sc}">${sl}</div>
+        <div class="proj-progress-ring">
+          <svg width="36" height="36" viewBox="0 0 36 36">
+            <circle class="ring-track" cx="18" cy="18" r="${r}"/>
+            <circle class="ring-fill" cx="18" cy="18" r="${r}" stroke="${ringColor}"
+              stroke-dasharray="${circ}" stroke-dashoffset="${dash}"/>
+          </svg>
+          <div class="ring-text" style="color:${ringColor}">${prog}%</div>
+        </div>
+      </div>
+      <div class="proj-title">${esc(p.title)}</div>
+      <div class="proj-desc">${esc(p.prob||'')}</div>
+    </div>
+    <div class="proj-body">
+      <div class="proj-label">👥 Equipo · Líder: ${esc(p.lider||'—')}</div>
+      <div class="team-row">${teamAvatars}</div>
+      <div class="proj-label">Progreso general</div>
+      <div class="proj-prog-bar"><div class="proj-prog-fill" style="width:${prog}%"></div></div>
+    </div>
+    <div class="proj-foot">
+      <div class="proj-dates">📁 ${(p.docs||[]).length} documento${(p.docs||[]).length!==1?'s':''}</div>
+      <div class="proj-docs-btn">Ver detalles →</div>
+    </div>`;
+  return div;
+}
+
+function openProjDetail(id) {
+  const p = STATE.projects.find(x=>x.id===id);
+  if (!p) return;
+  activeProjId = id;
+  document.getElementById('pd-title').textContent = p.title;
+  document.getElementById('pd-sub').textContent = p.prob||'';
+  document.getElementById('pd-team').innerHTML = (p.team||[]).map((t,i)=>`
+    <div class="team-chip">
+      <div class="team-avatar" style="background:${TEAM_COLORS[i%7]}22;color:${TEAM_COLORS[i%7]};width:20px;height:20px;font-size:0.5rem">${t.slice(0,2)}</div>
+      ${t}
+    </div>`).join('');
+  const prog = p.prog||0;
+  document.getElementById('pd-progbar').style.width = prog+'%';
+  document.getElementById('pd-progtext').textContent = prog+'% completado';
+  document.getElementById('pd-kpi').textContent = p.kpi||'—';
+  document.getElementById('pd-retro').value = p.retro||'';
+  document.getElementById('pd-docs').innerHTML = renderActaList(p.docs||[]);
+  document.getElementById('projDetailOverlay').classList.add('open');
+}
+
+function handleProjFile(e) {
+  const files = Array.from(e.target.files);
+  const p = STATE.projects.find(x=>x.id===activeProjId);
+  if (!p) return;
+  if (!p.docs) p.docs = [];
+  files.forEach(f => p.docs.push({ name: f.name, size: formatSize(f.size) }));
+  saveState();
+  document.getElementById('pd-docs').innerHTML = renderActaList(p.docs);
+  toast('📎 Archivo subido','ok');
+}
+
+function saveProjDetail() {
+  const p = STATE.projects.find(x=>x.id===activeProjId);
+  if (!p) return;
+  p.retro = document.getElementById('pd-retro').value;
+  saveState();
+  renderAlkimia();
+  closeOverlay('projDetailOverlay');
+  toast('✓ Proyecto actualizado','ok');
+}
+
+function openProjectModal() { document.getElementById('projOverlay').classList.add('open'); }
+
+function submitProject() {
+  const title = document.getElementById('fp-title').value.trim();
+  if (!title) { toast('Escribe un nombre para el proyecto','err'); return; }
+  const teamRaw = document.getElementById('fp-team').value.split(',').map(t=>t.trim()).filter(Boolean);
+  const team = teamRaw.map(t=>t.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||t.slice(0,2));
+  const p = {
+    id:'p'+Date.now(), title,
+    prob: document.getElementById('fp-prob').value.trim(),
+    mvp:  document.getElementById('fp-mvp').value.trim(),
+    estado: document.getElementById('fp-estado').value,
+    prog: parseInt(document.getElementById('fp-prog').value)||0,
+    lider: document.getElementById('fp-lider').value.trim(),
+    team, kpi: document.getElementById('fp-kpi').value.trim(),
+    docs:[], retro:''
+  };
+  STATE.projects.unshift(p);
+  saveState();
+  renderAlkimia();
+  closeOverlay('projOverlay');
+  ['fp-title','fp-prob','fp-mvp','fp-lider','fp-team','fp-kpi'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fp-prog').value='0';
+  toast('⚗️ Proyecto creado en Alkimia','ok');
+}
+
+function renderReconoc() {
+  const grid = document.getElementById('reconoc-grid');
+  grid.innerHTML = STATE.reconocimientos.map(r=>`
+    <div class="reconoc-card">
+      <div class="reconoc-medal">${r.medal||'🥇'}</div>
+      <div class="reconoc-name">${esc(r.nombre)}</div>
+      <div class="reconoc-reason">${esc(r.razon)}</div>
+      <div class="reconoc-month">${esc(r.mes)}</div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+function closeOverlay(id) { document.getElementById(id).classList.remove('open'); }
+
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => { if(e.target===o) o.classList.remove('open'); });
+});
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes+'B';
+  if (bytes < 1048576) return (bytes/1024).toFixed(1)+'KB';
+  return (bytes/1048576).toFixed(1)+'MB';
+}
+
+let toastT;
+function toast(msg, type='inf') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ── INIT ──
+renderKanban();
+</script>
+</body>
+</html>
